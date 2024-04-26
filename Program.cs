@@ -70,6 +70,23 @@
                     Console.WriteLine($"{restaurant.Name} {ratings.HighestRating}");
                 }
 
+                // -------------------------------------------------
+                Console.WriteLine();
+                Console.WriteLine("Restaurant Weighted Ratings");
+
+                var weightedRatings = reviews
+                    .GroupBy(x => x.RestaurantId)
+                    .Select(r => new
+                    {
+                        RestaurantId = r.Key,
+                        WeightedRating = r.Average(x => x.Rating) * r.Count() / reviews.Count()
+                    });
+
+                foreach (var ratings in weightedRatings)
+                {
+                    var restaurant = db.Restaurants.First(x => x.Id == ratings.RestaurantId);
+                    Console.WriteLine($"{restaurant.Name} {ratings.WeightedRating}");
+                }
             }
         }
     }
